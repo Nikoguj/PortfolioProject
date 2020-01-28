@@ -166,7 +166,7 @@ public class UsersTest {
     }
 
     @Test
-    public void testSaveUsersAddresses() {
+    public void testRemoveUsersAddress() {
         //Given
         Users users = new Users(LOGIN, PASSWORD);
         UsersAddress usersAddress1 = new UsersAddress(CITY, ZIP_CODE, STREET, HOUSE_NUMBER);
@@ -183,38 +183,22 @@ public class UsersTest {
         Long usersAddressId1 = usersAddress1.getId();
         Long usersAddressId2 = usersAddress2.getId();
 
+        //Then
         Optional<Users> returnUsers = userRepository.findById(usersID);
         Optional<UsersAddress> returnAddress1 = usersAddressRepository.findById(usersAddressId1);
 
-        //Then
         Assert.assertTrue(returnUsers.isPresent());
         Assert.assertEquals(2, returnUsers.get().getUsersAddressList().size());
-        Assert.assertEquals(CITY, returnUsers.get().getUsersAddressList().get(0).getCity());
-        Assert.assertEquals(ZIP_CODE, returnUsers.get().getUsersAddressList().get(0).getZipCode());
-        Assert.assertEquals(STREET, returnUsers.get().getUsersAddressList().get(0).getStreet());
-        Assert.assertEquals(HOUSE_NUMBER, returnUsers.get().getUsersAddressList().get(0).getHouseNumber());
-        Assert.assertEquals(CITY2, returnUsers.get().getUsersAddressList().get(1).getCity());
-        Assert.assertEquals(ZIP_CODE2, returnUsers.get().getUsersAddressList().get(1).getZipCode());
-        Assert.assertEquals(STREET2, returnUsers.get().getUsersAddressList().get(1).getStreet());
-        Assert.assertEquals(HOUSE_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getHouseNumber());
-        Assert.assertEquals(APARTMENT_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getApartmentNumber());
 
-        //Clean up
         returnAddress1.get().setUsers(null);
         usersAddressRepository.save(returnAddress1.get());
         usersAddressRepository.deleteById(returnAddress1.get().getId());
 
         Optional<Users> returnUsers2 = userRepository.findById(usersID);
+        Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
 
         Assert.assertTrue(returnUsers2.isPresent());
         Assert.assertEquals(1, returnUsers2.get().getUsersAddressList().size());
-        Assert.assertEquals(CITY2, returnUsers.get().getUsersAddressList().get(1).getCity());
-        Assert.assertEquals(ZIP_CODE2, returnUsers.get().getUsersAddressList().get(1).getZipCode());
-        Assert.assertEquals(STREET2, returnUsers.get().getUsersAddressList().get(1).getStreet());
-        Assert.assertEquals(HOUSE_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getHouseNumber());
-        Assert.assertEquals(APARTMENT_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getApartmentNumber());
-
-        Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
 
         returnAddress2.get().setUsers(null);
         usersAddressRepository.save(returnAddress2.get());
@@ -224,6 +208,7 @@ public class UsersTest {
         Assert.assertTrue(returnUsers3.isPresent());
         Assert.assertEquals(0, returnUsers3.get().getUsersAddressList().size());
 
+        //Clean Up
         userRepository.deleteById(usersID);
         Optional<Users> returnUsers4 = userRepository.findById(usersID);
         Assert.assertFalse(returnUsers4.isPresent());
