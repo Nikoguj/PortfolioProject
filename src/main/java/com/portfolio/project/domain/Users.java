@@ -11,8 +11,6 @@ public class Users {
     private Long id;
     private String login;
     private String password;
-    private String mail;
-    private boolean mailConfirmed;
     private String name;
     private String surname;
     private String phoneNumber;
@@ -20,36 +18,29 @@ public class Users {
     private Date createDate;
     private Date lastLogin;
     private SessionKey sessionKey;
-    private List<UsersAddress> usersAddressList;
+    private List<UsersAddress> usersAddressList = new ArrayList<>();
+    private UsersMail usersMail;
 
     public Users() {
-        this.mailConfirmed = false;
         this.phoneNumberConfirmed = false;
         this.createDate = new Date();
-        this.usersAddressList = new ArrayList<>();
     }
 
-    public Users(String login, String password, String mail, String name, String surname, String phoneNumber) {
+    public Users(String login, String password, String name, String surname, String phoneNumber) {
         this.login = login;
         this.password = password;
-        this.mail = mail;
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
-        this.mailConfirmed = false;
         this.phoneNumberConfirmed = false;
         this.createDate = new Date();
-        this.usersAddressList = new ArrayList<>();
     }
 
-    public Users(String login, String password, String mail) {
+    public Users(String login, String password) {
         this.login = login;
         this.password = password;
-        this.mail = mail;
-        this.mailConfirmed = false;
         this.phoneNumberConfirmed = false;
         this.createDate = new Date();
-        this.usersAddressList = new ArrayList<>();
     }
 
     @Id
@@ -82,25 +73,6 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @NotNull
-    @Column(name = "mail", unique = true)
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    @Column(name = "mail_Confirmed")
-    public boolean isMailConfirmed() {
-        return mailConfirmed;
-    }
-
-    public void setMailConfirmed(boolean mailConfirmed) {
-        this.mailConfirmed = mailConfirmed;
     }
 
     @Column(name = "name")
@@ -169,13 +141,8 @@ public class Users {
     }
 
     @OneToMany(mappedBy = "users",
-            cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.REMOVE},
-            fetch = FetchType.EAGER,
-            targetEntity = UsersAddress.class
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
     )
     public List<UsersAddress> getUsersAddressList() {
         return usersAddressList;
@@ -184,4 +151,15 @@ public class Users {
     public void setUsersAddressList(List<UsersAddress> usersAddressList) {
         this.usersAddressList = usersAddressList;
     }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_Mail_Id", referencedColumnName = "user_Mail_Id")
+    public UsersMail getUsersMail() {
+        return usersMail;
+    }
+
+    public void setUsersMail(UsersMail usersMail) {
+        this.usersMail = usersMail;
+    }
+
 }

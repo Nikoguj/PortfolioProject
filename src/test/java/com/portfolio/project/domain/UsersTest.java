@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -48,7 +47,7 @@ public class UsersTest {
     @Test
     public void testSaveUserWithoutOtherEntity() {
         //Given
-        Users users = new Users(LOGIN, PASSWORD, MAIL, NAME, SURNAME, PHONE_NUMBER);
+        Users users = new Users(LOGIN, PASSWORD, NAME, SURNAME, PHONE_NUMBER);
 
         //When
         userRepository.save(users);
@@ -59,11 +58,9 @@ public class UsersTest {
         Assert.assertTrue(returnUser.isPresent());
         Assert.assertEquals(LOGIN, returnUser.get().getLogin());
         Assert.assertEquals(PASSWORD, returnUser.get().getPassword());
-        Assert.assertEquals(MAIL, returnUser.get().getMail());
         Assert.assertEquals(NAME, returnUser.get().getName());
         Assert.assertEquals(SURNAME, returnUser.get().getSurname());
         Assert.assertEquals(PHONE_NUMBER, returnUser.get().getPhoneNumber());
-        Assert.assertEquals(false, returnUser.get().isMailConfirmed());
         Assert.assertEquals(false, returnUser.get().isPhoneNumberConfirmed());
         Assert.assertNotEquals(0, returnUser.get().getCreateDate());
 
@@ -77,7 +74,7 @@ public class UsersTest {
     @Test
     public void testSaveUserWithSessionKey() {
         //Given
-        Users user = new Users(LOGIN, PASSWORD, MAIL, NAME, SURNAME, PHONE_NUMBER);
+        Users user = new Users(LOGIN, PASSWORD, NAME, SURNAME, PHONE_NUMBER);
         SessionKey sessionKey = new SessionKey();
         sessionKey.generateSessionKey();
         user.setSessionKey(sessionKey);
@@ -102,7 +99,7 @@ public class UsersTest {
     @Test
     public void testSaveUserWithSessionKeyWhenPreviousWasEntered() {
         //Given
-        Users user = new Users(LOGIN, PASSWORD, MAIL, NAME, SURNAME, PHONE_NUMBER);
+        Users user = new Users(LOGIN, PASSWORD, NAME, SURNAME, PHONE_NUMBER);
         SessionKey sessionKey = new SessionKey();
         sessionKey.generateSessionKey();
         user.setSessionKey(sessionKey);
@@ -117,7 +114,7 @@ public class UsersTest {
 
         Optional<Users> returnUser = userRepository.findById(userId);
         Optional<SessionKey> returnSessionKey = sessionKeyRepository.findById(sessionKeyId);
-        if(returnSessionKey.isPresent() && returnUser.isPresent()) {
+        if (returnSessionKey.isPresent() && returnUser.isPresent()) {
             returnSessionKey.get().generateSessionKey();
             returnUser.get().setSessionKey(returnSessionKey.get());
             returnSessionKey.get().setUsers(returnUser.get());
@@ -138,11 +135,10 @@ public class UsersTest {
     }
 
 
-
     @Test
     public void testSaveUsersAddress() {
         //Given
-        Users users = new Users(LOGIN, PASSWORD, MAIL);
+        Users users = new Users(LOGIN, PASSWORD);
         UsersAddress usersAddress = new UsersAddress(CITY, ZIP_CODE, STREET, HOUSE_NUMBER);
 
         users.getUsersAddressList().add(usersAddress);
@@ -172,7 +168,7 @@ public class UsersTest {
     @Test
     public void testSaveUsersAddresses() {
         //Given
-        Users users = new Users(LOGIN, PASSWORD, MAIL);
+        Users users = new Users(LOGIN, PASSWORD);
         UsersAddress usersAddress1 = new UsersAddress(CITY, ZIP_CODE, STREET, HOUSE_NUMBER);
         UsersAddress usersAddress2 = new UsersAddress(CITY2, ZIP_CODE2, STREET2, HOUSE_NUMBER2, APARTMENT_NUMBER2);
 
@@ -184,10 +180,11 @@ public class UsersTest {
         //When
         userRepository.save(users);
         Long usersID = users.getId();
-        Optional<Users> returnUsers = userRepository.findById(usersID);
+        Long usersAddressId1 = usersAddress1.getId();
+        Long usersAddressId2 = usersAddress2.getId();
 
-        Long usersAddress1Id = usersAddress1.getId();
-        Long usersAddress2Id = usersAddress2.getId();
+        Optional<Users> returnUsers = userRepository.findById(usersID);
+        Optional<UsersAddress> returnAddress1 = usersAddressRepository.findById(usersAddressId1);
 
         //Then
         Assert.assertTrue(returnUsers.isPresent());
@@ -203,15 +200,32 @@ public class UsersTest {
         Assert.assertEquals(APARTMENT_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getApartmentNumber());
 
         //Clean up
-        returnUsers = userRepository.findById(usersID);
-        Optional<UsersAddress> returnUsersAddress = usersAddressRepository.findById(usersAddress1Id);
-        Optional<UsersAddress> returnUsersAddress2 = usersAddressRepository.findById(usersAddress2Id);
+        returnAddress1.get().setUsers(null);
+        usersAddressRepository.save(returnAddress1.get());
+        usersAddressRepository.deleteById(returnAddress1.get().getId());
 
-        if(returnUsers.isPresent() && returnUsersAddress.isPresent() && returnUsersAddress2.isPresent()) {
-            returnUsers.get().getUsersAddressList().remove(returnUsersAddress);
-            usersAddressRepository.deleteById(returnUsersAddress.get().getId());
-        }
+        Optional<Users> returnUsers2 = userRepository.findById(usersID);
 
-        Assert.assertEquals(1, returnUsers.get().getUsersAddressList().size());
+        Assert.assertTrue(returnUsers2.isPresent());
+        Assert.assertEquals(1, returnUsers2.get().getUsersAddressList().size());
+        Assert.assertEquals(CITY2, returnUsers.get().getUsersAddressList().get(1).getCity());
+        Assert.assertEquals(ZIP_CODE2, returnUsers.get().getUsersAddressList().get(1).getZipCode());
+        Assert.assertEquals(STREET2, returnUsers.get().getUsersAddressList().get(1).getStreet());
+        Assert.assertEquals(HOUSE_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getHouseNumber());
+        Assert.assertEquals(APARTMENT_NUMBER2, returnUsers.get().getUsersAddressList().get(1).getApartmentNumber());
+
+        Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
+
+        returnAddress2.get().setUsers(null);
+        usersAddressRepository.save(returnAddress2.get());
+        usersAddressRepository.deleteById(returnAddress2.get().getId());
+
+        Optional<Users> returnUsers3 = userRepository.findById(usersID);
+        Assert.assertTrue(returnUsers3.isPresent());
+        Assert.assertEquals(0, returnUsers3.get().getUsersAddressList().size());
+
+        userRepository.deleteById(usersID);
+        Optional<Users> returnUsers4 = userRepository.findById(usersID);
+        Assert.assertFalse(returnUsers4.isPresent());
     }
 }

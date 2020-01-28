@@ -64,4 +64,12 @@ public class SessionKey {
         this.termOfValidity = LocalDateTime.now().plusMinutes(30);
         return sessionKey;
     }
+
+    public boolean equalsSessionKey(int sessionKey) {
+        if(this.sessionKey == sessionKey) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

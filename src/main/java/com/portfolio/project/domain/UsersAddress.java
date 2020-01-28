@@ -105,7 +105,7 @@ public class UsersAddress {
         ApartmentNumber = apartmentNumber;
     }
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "Users_Id")
     public Users getUsers() {
         return users;
