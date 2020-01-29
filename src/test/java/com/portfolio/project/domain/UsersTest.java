@@ -3,8 +3,8 @@ package com.portfolio.project.domain;
 import com.portfolio.project.repository.SessionKeyRepository;
 import com.portfolio.project.repository.UserRepository;
 import com.portfolio.project.repository.UsersAddressRepository;
+import com.portfolio.project.service.EmailService;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +44,16 @@ public class UsersTest {
     @Autowired
     private UsersAddressRepository usersAddressRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Test
     public void testSaveUserWithoutOtherEntity() {
         //Given
-        Users users = new Users(LOGIN, PASSWORD, NAME, SURNAME, PHONE_NUMBER);
+        Users users = new Users(LOGIN, PASSWORD);
+        users.setName(NAME);
+        users.setSurname(SURNAME);
+        users.setPhoneNumber(PHONE_NUMBER);
 
         //When
         userRepository.save(users);
@@ -74,7 +80,10 @@ public class UsersTest {
     @Test
     public void testSaveUserWithSessionKey() {
         //Given
-        Users user = new Users(LOGIN, PASSWORD, NAME, SURNAME, PHONE_NUMBER);
+        Users user = new Users(LOGIN, PASSWORD);
+        user.setName(NAME);
+        user.setSurname(SURNAME);
+        user.setPhoneNumber(PHONE_NUMBER);
         SessionKey sessionKey = new SessionKey();
         sessionKey.generateSessionKey();
         user.setSessionKey(sessionKey);
@@ -99,7 +108,10 @@ public class UsersTest {
     @Test
     public void testSaveUserWithSessionKeyWhenPreviousWasEntered() {
         //Given
-        Users user = new Users(LOGIN, PASSWORD, NAME, SURNAME, PHONE_NUMBER);
+        Users user = new Users(LOGIN, PASSWORD);
+        user.setName(NAME);
+        user.setSurname(SURNAME);
+        user.setPhoneNumber(PHONE_NUMBER);
         SessionKey sessionKey = new SessionKey();
         sessionKey.generateSessionKey();
         user.setSessionKey(sessionKey);
@@ -110,7 +122,7 @@ public class UsersTest {
         Long userId = user.getId();
         Long sessionKeyId = user.getSessionKey().getId();
 
-        int oldSessionKey = sessionKey.getSessionKey();
+        String oldSessionKey = sessionKey.getSessionKey();
 
         Optional<Users> returnUser = userRepository.findById(userId);
         Optional<SessionKey> returnSessionKey = sessionKeyRepository.findById(sessionKeyId);
@@ -120,7 +132,7 @@ public class UsersTest {
             returnSessionKey.get().setUsers(returnUser.get());
         }
 
-        int newSessionKey = returnSessionKey.get().getSessionKey();
+        String newSessionKey = returnSessionKey.get().getSessionKey();
 
         //Then
         Assert.assertTrue(returnUser.isPresent());
@@ -190,11 +202,15 @@ public class UsersTest {
         Assert.assertTrue(returnUsers.isPresent());
         Assert.assertEquals(2, returnUsers.get().getUsersAddressList().size());
 
-        returnAddress1.get().setUsers(null);
-        usersAddressRepository.save(returnAddress1.get());
+        returnUsers.get().getUsersAddressList().remove(returnAddress1.get());
+        userRepository.save(returnUsers.get());
+        returnUsers = userRepository.findById(usersID);
         usersAddressRepository.deleteById(returnAddress1.get().getId());
+        System.out.println(returnUsers.get().getUsersAddressList().size());
+/*        returnAddress1.get().setUsers(null);
+        usersAddressRepository.save(returnAddress1.get());*/
 
-        Optional<Users> returnUsers2 = userRepository.findById(usersID);
+        /*Optional<Users> returnUsers2 = userRepository.findById(usersID);
         Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
 
         Assert.assertTrue(returnUsers2.isPresent());
@@ -211,6 +227,6 @@ public class UsersTest {
         //Clean Up
         userRepository.deleteById(usersID);
         Optional<Users> returnUsers4 = userRepository.findById(usersID);
-        Assert.assertFalse(returnUsers4.isPresent());
+        Assert.assertFalse(returnUsers4.isPresent());*/
     }
 }
