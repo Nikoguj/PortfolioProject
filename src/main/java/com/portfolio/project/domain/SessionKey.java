@@ -4,11 +4,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity(name = "Session_Key")
 public class SessionKey {
     private Long id;
-    private int sessionKey;
+    private String sessionKey;
     private LocalDateTime termOfValidity;
     private Users users;
 
@@ -28,11 +29,11 @@ public class SessionKey {
     }
 
     @Column(name = "session_Key")
-    public int getSessionKey() {
+    public String getSessionKey() {
         return sessionKey;
     }
 
-    public void setSessionKey(int sessionKey) {
+    public void setSessionKey(String sessionKey) {
         this.sessionKey = sessionKey;
     }
 
@@ -54,22 +55,9 @@ public class SessionKey {
         this.users = users;
     }
 
-    public int generateSessionKey() {
-        SecureRandom secureRandom = new SecureRandom();
-
-        int max = 100000000;
-        int min = 10000000;
-        int sessionKey = secureRandom.nextInt(max-min)+min;
-        this.sessionKey = sessionKey;
-        this.termOfValidity = LocalDateTime.now().plusMinutes(30);
-        return sessionKey;
-    }
-
-    public boolean equalsSessionKey(int sessionKey) {
-        if(this.sessionKey == sessionKey) {
-            return true;
-        } else {
-            return false;
-        }
+    public String generateSessionKey() {
+        UUID uuid = UUID.randomUUID();
+        this.sessionKey = uuid.toString();
+        return uuid.toString();
     }
 }

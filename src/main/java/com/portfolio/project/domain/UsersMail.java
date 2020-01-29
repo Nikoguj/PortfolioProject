@@ -2,14 +2,13 @@ package com.portfolio.project.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity(name = "Mail")
 public class UsersMail {
     private Long id;
     private String mail;
-    private int pinConfirmMail;
+    private String pinConfirmMail;
     private boolean mailConfirmed;
     private Users users;
 
@@ -39,11 +38,11 @@ public class UsersMail {
     }
 
     @Column(name = "pin_Confirm_Mail")
-    public int getPinConfirmMail() {
+    public String getPinConfirmMail() {
         return pinConfirmMail;
     }
 
-    public void setPinConfirmMail(int pinConfirmMail) {
+    public void setPinConfirmMail(String pinConfirmMail) {
         this.pinConfirmMail = pinConfirmMail;
     }
 
@@ -65,23 +64,9 @@ public class UsersMail {
         this.users = users;
     }
 
-    public int generatePinConfirm() {
-        SecureRandom secureRandom = new SecureRandom();
-
-        int max = 1000000;
-        int min = 100000;
-        int pinConfirmMail = secureRandom.nextInt(max-min)+min;
-        this.pinConfirmMail = pinConfirmMail;
-        return pinConfirmMail;
-    }
-
-    public boolean equalsPinConfirm(int pinConfirmMail) {
-        if(this.pinConfirmMail == pinConfirmMail) {
-            this.mailConfirmed = true;
-            return true;
-        } else {
-            this.mailConfirmed = false;
-            return false;
-        }
+    public String generatePinConfirm() {
+        UUID uuid = UUID.randomUUID();
+        this.pinConfirmMail = uuid.toString();
+        return uuid.toString();
     }
 }
