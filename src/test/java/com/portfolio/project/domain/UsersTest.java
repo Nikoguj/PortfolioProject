@@ -202,11 +202,12 @@ public class UsersTest {
         Assert.assertTrue(returnUsers.isPresent());
         Assert.assertEquals(2, returnUsers.get().getUsersAddressList().size());
 
-        returnUsers.get().getUsersAddressList().remove(returnAddress1.get());
-        userRepository.save(returnUsers.get());
-        returnUsers = userRepository.findById(usersID);
+        Users users1 = returnUsers.get();
+        users1.getUsersAddressList().clear();
+        System.out.println(users1.getUsersAddressList().size());
+        userRepository.save(users1);
         usersAddressRepository.deleteById(returnAddress1.get().getId());
-        System.out.println(returnUsers.get().getUsersAddressList().size());
+        System.out.println(users1.getUsersAddressList().size());
 /*        returnAddress1.get().setUsers(null);
         usersAddressRepository.save(returnAddress1.get());*/
 
