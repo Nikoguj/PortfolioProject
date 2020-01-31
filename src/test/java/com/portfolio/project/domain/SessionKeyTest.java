@@ -1,8 +1,8 @@
 package com.portfolio.project.domain;
 
-import com.portfolio.project.repository.SessionKeyRepository;
+import com.portfolio.project.domain.user.SessionKey;
+import com.portfolio.project.repository.user.SessionKeyRepository;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

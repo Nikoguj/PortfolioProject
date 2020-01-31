@@ -1,6 +1,6 @@
 package com.portfolio.project.service;
 
-import com.portfolio.project.domain.UsersMail;
+import com.portfolio.project.domain.user.UsersMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;

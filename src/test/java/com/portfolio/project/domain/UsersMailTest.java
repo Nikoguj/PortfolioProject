@@ -1,6 +1,7 @@
 package com.portfolio.project.domain;
 
-import com.portfolio.project.repository.UsersMailRepository;
+import com.portfolio.project.domain.user.UsersMail;
+import com.portfolio.project.repository.user.UsersMailRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

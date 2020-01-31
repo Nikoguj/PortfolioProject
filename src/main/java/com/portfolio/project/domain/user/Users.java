@@ -1,4 +1,4 @@
-package com.portfolio.project.domain;
+package com.portfolio.project.domain.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -132,7 +132,8 @@ public class Users {
 
     @OneToMany(mappedBy = "users",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            fetch = FetchType.EAGER,
+            orphanRemoval=true
     )
     public List<UsersAddress> getUsersAddressList() {
         return usersAddressList;

@@ -1,4 +1,4 @@
-package com.portfolio.project.domain;
+package com.portfolio.project.domain.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -69,4 +69,5 @@ public class UsersMail {
         this.pinConfirmMail = uuid.toString();
         return uuid.toString();
     }
+
 }

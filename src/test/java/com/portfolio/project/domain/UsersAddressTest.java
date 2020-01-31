@@ -1,7 +1,7 @@
 package com.portfolio.project.domain;
 
-import com.portfolio.project.repository.UserRepository;
-import com.portfolio.project.repository.UsersAddressRepository;
+import com.portfolio.project.domain.user.UsersAddress;
+import com.portfolio.project.repository.user.UsersAddressRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -32,7 +31,9 @@ public class UsersAddressTest {
     @Test
     public void testSaveUsersAddressWithoutUser() {
         //Given
-        UsersAddress usersAddress = new UsersAddress(CITY, ZIP_CODE, STREET, HOUSE_NUMBER, APARTMENT_NUMBER);
+        UsersAddress usersAddress = new UsersAddress(CITY, ZIP_CODE, HOUSE_NUMBER);
+        usersAddress.setStreet(STREET);
+        usersAddress.setApartmentNumber(APARTMENT_NUMBER);
 
         //When
         usersAddressRepository.save(usersAddress);

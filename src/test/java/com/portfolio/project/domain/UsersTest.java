@@ -1,8 +1,11 @@
 package com.portfolio.project.domain;
 
-import com.portfolio.project.repository.SessionKeyRepository;
-import com.portfolio.project.repository.UserRepository;
-import com.portfolio.project.repository.UsersAddressRepository;
+import com.portfolio.project.domain.user.SessionKey;
+import com.portfolio.project.domain.user.Users;
+import com.portfolio.project.domain.user.UsersAddress;
+import com.portfolio.project.repository.user.SessionKeyRepository;
+import com.portfolio.project.repository.user.UserRepository;
+import com.portfolio.project.repository.user.UsersAddressRepository;
 import com.portfolio.project.service.EmailService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -151,7 +155,8 @@ public class UsersTest {
     public void testSaveUsersAddress() {
         //Given
         Users users = new Users(LOGIN, PASSWORD);
-        UsersAddress usersAddress = new UsersAddress(CITY, ZIP_CODE, STREET, HOUSE_NUMBER);
+        UsersAddress usersAddress = new UsersAddress(CITY, ZIP_CODE, HOUSE_NUMBER);
+        usersAddress.setStreet(STREET);
 
         users.getUsersAddressList().add(usersAddress);
         usersAddress.setUsers(users);
@@ -181,62 +186,33 @@ public class UsersTest {
     public void testRemoveUsersAddress() {
         //Given
         Users users = new Users(LOGIN, PASSWORD);
-        UsersAddress usersAddress1 = new UsersAddress(CITY, ZIP_CODE, STREET, HOUSE_NUMBER);
-        UsersAddress usersAddress2 = new UsersAddress(CITY2, ZIP_CODE2, STREET2, HOUSE_NUMBER2, APARTMENT_NUMBER2);
+        UsersAddress usersAddress1 = new UsersAddress(CITY, ZIP_CODE, HOUSE_NUMBER);
+        usersAddress1.setStreet(STREET);
 
-        users.getUsersAddressList().add(usersAddress1);
-        users.getUsersAddressList().add(usersAddress2);
         usersAddress1.setUsers(users);
-        usersAddress2.setUsers(users);
+        users.getUsersAddressList().add(usersAddress1);
 
         //When
         userRepository.save(users);
         Long usersID = users.getId();
-        Long usersAddressId1 = usersAddress1.getId();
-        Long usersAddressId2 = usersAddress2.getId();
+        Long usersAddressId = usersAddress1.getId();
 
-        //Then
+        //Then & Clean up
         Optional<Users> returnUsers = userRepository.findById(usersID);
-        Optional<UsersAddress> returnAddress1 = usersAddressRepository.findById(usersAddressId1);
-        Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
+        Optional<UsersAddress> returnAddress = usersAddressRepository.findById(usersAddressId);
 
         Assert.assertTrue(returnUsers.isPresent());
-        Assert.assertEquals(2, returnUsers.get().getUsersAddressList().size());
+        Assert.assertTrue(returnAddress.isPresent());
+        Assert.assertEquals(1, returnUsers.get().getUsersAddressList().size());
 
-        for(UsersAddress usersAddress: returnUsers.get().getUsersAddressList()) {
-            if(usersAddress.equals(returnAddress1.get())) {
-                System.out.println(usersAddress.hashCode());
+        returnUsers.get().getUsersAddressList().remove(returnAddress.get());
+        Assert.assertEquals(0, returnUsers.get().getUsersAddressList().size());
+        userRepository.save(returnUsers.get());
 
-            }
-        }
-        System.out.println(returnAddress2.get().hashCode());
-
-        Users userToSave =  returnUsers.get();
-        userToSave.getUsersAddressList().remove(returnAddress1.get());
-        System.out.println(userToSave.getUsersAddressList().size());
-        userRepository.save(userToSave);
-        System.out.println(usersAddressId1);
-        usersAddressRepository.deleteById(usersAddressId1);
-/*        returnAddress1.get().setUsers(null);
-        usersAddressRepository.save(returnAddress1.get());*/
-
-        /*Optional<Users> returnUsers2 = userRepository.findById(usersID);
-        Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
-
+        Optional<Users> returnUsers2 = userRepository.findById(users.getId());
         Assert.assertTrue(returnUsers2.isPresent());
-        Assert.assertEquals(1, returnUsers2.get().getUsersAddressList().size());
+        Assert.assertEquals(0, returnUsers2.get().getUsersAddressList().size());
 
-        returnAddress2.get().setUsers(null);
-        usersAddressRepository.save(returnAddress2.get());
-        usersAddressRepository.deleteById(returnAddress2.get().getId());
-
-        Optional<Users> returnUsers3 = userRepository.findById(usersID);
-        Assert.assertTrue(returnUsers3.isPresent());
-        Assert.assertEquals(0, returnUsers3.get().getUsersAddressList().size());
-
-        //Clean Up
         userRepository.deleteById(usersID);
-        Optional<Users> returnUsers4 = userRepository.findById(usersID);
-        Assert.assertFalse(returnUsers4.isPresent());*/
     }
 }

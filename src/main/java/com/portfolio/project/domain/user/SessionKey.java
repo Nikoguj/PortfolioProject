@@ -1,8 +1,7 @@
-package com.portfolio.project.domain;
+package com.portfolio.project.domain.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -60,4 +59,5 @@ public class SessionKey {
         this.sessionKey = uuid.toString();
         return uuid.toString();
     }
+
 }

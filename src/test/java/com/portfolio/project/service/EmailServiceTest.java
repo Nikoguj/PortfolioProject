@@ -1,7 +1,6 @@
 package com.portfolio.project.service;
 
-import com.portfolio.project.domain.UsersMail;
-import org.junit.Assert;
+import com.portfolio.project.domain.user.UsersMail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

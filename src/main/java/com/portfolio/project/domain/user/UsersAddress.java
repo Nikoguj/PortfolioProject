@@ -1,4 +1,4 @@
-package com.portfolio.project.domain;
+package com.portfolio.project.domain.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,31 +17,9 @@ public class UsersAddress {
 
     }
 
-    public UsersAddress(String city, String zipCode, String street, int houseNumber, int apartmentNumber) {
-        City = city;
-        ZipCode = zipCode;
-        Street = street;
-        HouseNumber = houseNumber;
-        ApartmentNumber = apartmentNumber;
-    }
-
-    public UsersAddress(String city, String zipCode, int houseNumber, int apartmentNumber) {
-        City = city;
-        ZipCode = zipCode;
-        HouseNumber = houseNumber;
-        ApartmentNumber = apartmentNumber;
-    }
-
     public UsersAddress(String city, String zipCode, int houseNumber) {
         City = city;
         ZipCode = zipCode;
-        HouseNumber = houseNumber;
-    }
-
-    public UsersAddress(String city, String zipCode, String street, int houseNumber) {
-        City = city;
-        ZipCode = zipCode;
-        Street = street;
         HouseNumber = houseNumber;
     }
 

@@ -1,6 +1,6 @@
-package com.portfolio.project.repository;
+package com.portfolio.project.repository.user;
 
-import com.portfolio.project.domain.UsersMail;
+import com.portfolio.project.domain.user.UsersMail;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UsersMailRepository extends CrudRepository<UsersMail, Long> {
