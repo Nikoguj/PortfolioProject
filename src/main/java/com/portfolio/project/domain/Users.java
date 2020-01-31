@@ -152,4 +152,21 @@ public class Users {
         this.usersMail = usersMail;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Users users = (Users) o;
+
+        if (id != null ? !id.equals(users.id) : users.id != null) return false;
+        return login != null ? login.equals(users.login) : users.login == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        return result;
+    }
 }

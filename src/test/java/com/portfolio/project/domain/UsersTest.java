@@ -198,16 +198,25 @@ public class UsersTest {
         //Then
         Optional<Users> returnUsers = userRepository.findById(usersID);
         Optional<UsersAddress> returnAddress1 = usersAddressRepository.findById(usersAddressId1);
+        Optional<UsersAddress> returnAddress2 = usersAddressRepository.findById(usersAddressId2);
 
         Assert.assertTrue(returnUsers.isPresent());
         Assert.assertEquals(2, returnUsers.get().getUsersAddressList().size());
 
-        Users users1 = returnUsers.get();
-        users1.getUsersAddressList().clear();
-        System.out.println(users1.getUsersAddressList().size());
-        userRepository.save(users1);
-        usersAddressRepository.deleteById(returnAddress1.get().getId());
-        System.out.println(users1.getUsersAddressList().size());
+        for(UsersAddress usersAddress: returnUsers.get().getUsersAddressList()) {
+            if(usersAddress.equals(returnAddress1.get())) {
+                System.out.println(usersAddress.hashCode());
+
+            }
+        }
+        System.out.println(returnAddress2.get().hashCode());
+
+        Users userToSave =  returnUsers.get();
+        userToSave.getUsersAddressList().remove(returnAddress1.get());
+        System.out.println(userToSave.getUsersAddressList().size());
+        userRepository.save(userToSave);
+        System.out.println(usersAddressId1);
+        usersAddressRepository.deleteById(usersAddressId1);
 /*        returnAddress1.get().setUsers(null);
         usersAddressRepository.save(returnAddress1.get());*/
 

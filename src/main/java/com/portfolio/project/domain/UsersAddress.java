@@ -115,4 +115,32 @@ public class UsersAddress {
         this.users = users;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UsersAddress that = (UsersAddress) o;
+
+        if (HouseNumber != that.HouseNumber) return false;
+        if (ApartmentNumber != that.ApartmentNumber) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (City != null ? !City.equals(that.City) : that.City != null) return false;
+        if (ZipCode != null ? !ZipCode.equals(that.ZipCode) : that.ZipCode != null) return false;
+        if (!Street.equals(that.Street)) return false;
+        return users != null ? users.equals(that.users) : that.users == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (City != null ? City.hashCode() : 0);
+        result = 31 * result + (ZipCode != null ? ZipCode.hashCode() : 0);
+        result = 31 * result + Street.hashCode();
+        result = 31 * result + HouseNumber;
+        result = 31 * result + ApartmentNumber;
+        result = 31 * result + (users != null ? users.hashCode() : 0);
+        return result;
+    }
 }
