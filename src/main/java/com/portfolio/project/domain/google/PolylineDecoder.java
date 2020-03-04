@@ -1,4 +1,7 @@
-package com.portfolio.project.google;
+package com.portfolio.project.domain.google;
+
+import com.portfolio.project.domain.google.Point;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.List;
  * Port to Java of Mark McClures Javascript PolylineEncoder :
  * http://facstaff.unca.edu/mcmcclur/GoogleMaps/EncodePolyline/decode.js
  */
+@Component
 public class PolylineDecoder {
     private static final double DEFAULT_PRECISION = 1E5;
 

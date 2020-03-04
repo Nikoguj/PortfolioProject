@@ -1,9 +1,11 @@
 package com.portfolio.project.google.mapper;
 
 import com.portfolio.project.google.domain.*;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class GoogleMapper {
 
     public GoogleDirections mapToDirections(GoogleDirectionsDto googleDirectionsDto) {
