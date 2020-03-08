@@ -1,6 +1,6 @@
 package com.portfolio.project.controller;
 
-import com.portfolio.project.domain.google.Points;
+
 import com.portfolio.project.domain.google.PointsDto;
 import com.portfolio.project.mapper.PointsMapper;
 import com.portfolio.project.service.PointsService;
@@ -26,12 +26,17 @@ public class PointsController {
     }
 
     @GetMapping("getPoints/{directions}/{origin}/{distance}")
-    public PointsDto getPoints(@PathVariable String directions, @PathVariable String origin, @PathVariable int distance) {
+    public PointsDto getPoints(@PathVariable String directions, @PathVariable String origin, @PathVariable int distance) throws InterruptedException {
         return pointsMapper.mapToPointsDto(pointsService.getPointsWithDistanceAndTimeBetween(directions, origin, distance));
     }
 
     @GetMapping("getPointsWithArrivalTime/{directions}/{origin}/{distance}/{startTime}")
-    public PointsDto getPoints(@PathVariable String directions, @PathVariable String origin, @PathVariable int distance, @PathVariable int startTime) {
+    public PointsDto getPoints(@PathVariable String directions, @PathVariable String origin, @PathVariable int distance, @PathVariable int startTime) throws InterruptedException {
         return pointsMapper.mapToPointsDto(pointsService.getPointsWithArrivalTime(directions, origin, distance, startTime));
+    }
+
+    @GetMapping("getPointsWithWeather/{directions}/{origin}/{distance}/{startTime}")
+    public PointsDto getWeather(@PathVariable String directions, @PathVariable String origin, @PathVariable int distance, @PathVariable int startTime) throws InterruptedException {
+        return pointsMapper.mapToPointsDto(pointsService.getPointsWithWeather(directions, origin, distance, startTime));
     }
 }

@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriBuilder;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
@@ -25,16 +26,19 @@ public class DarkSkyClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public DarkSkyForecastDto getDarkSkyForecast(DarkSkyPoint darkSkyPoint) {
+    public Mono<DarkSkyForecastDto> getDarkSkyForecast(DarkSkyPoint darkSkyPoint) throws InterruptedException {
+        Thread.sleep(15);
 
         URI url = getURI(darkSkyPoint);
-        System.out.println(url);
         try{
-            DarkSkyForecastDto darkSkyForecastDto = restTemplate.getForObject(url, DarkSkyForecastDto.class);
-            return darkSkyForecastDto;
+            return WebClient.create()
+                    .get()
+                    .uri(getURI(darkSkyPoint))
+                    .retrieve()
+                    .bodyToMono(DarkSkyForecastDto.class);
         }catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
-            return new DarkSkyForecastDto();
+            return WebClient.create().get().retrieve().bodyToMono(DarkSkyForecastDto.class);
         }
     }
 

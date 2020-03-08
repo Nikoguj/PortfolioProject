@@ -5,6 +5,7 @@ import com.portfolio.project.darksky.domain.DarkSkyForecastDto;
 import com.portfolio.project.darksky.domain.DarkSkyPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class DarkSkyService {
@@ -12,7 +13,7 @@ public class DarkSkyService {
     @Autowired
     private DarkSkyClient darkSkyClient;
 
-    public DarkSkyForecastDto fetchDarkSkyForecast(final DarkSkyPoint darkSkyPoint) {
+    public Mono<DarkSkyForecastDto> fetchDarkSkyForecast(final DarkSkyPoint darkSkyPoint) throws InterruptedException {
         return darkSkyClient.getDarkSkyForecast(darkSkyPoint);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("v1/darksky/")
@@ -17,7 +18,7 @@ public class DarkSkyController {
     private DarkSkyService darkSkyService;
 
     @GetMapping("forecast/{lat}/{lng}")
-    public DarkSkyForecastDto getForecast(@PathVariable double lat, @PathVariable double lng) {
+    public Mono<DarkSkyForecastDto> getForecast(@PathVariable double lat, @PathVariable double lng) throws InterruptedException {
         DarkSkyPoint darkSkyPoint = new DarkSkyPoint(lat, lng);
         return darkSkyService.fetchDarkSkyForecast(darkSkyPoint);
     }

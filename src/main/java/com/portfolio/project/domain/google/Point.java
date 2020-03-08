@@ -12,6 +12,7 @@ public class Point {
     private double lng;
     private int timeFromLastPoint;
     private int arrivalTime;
+    private Weather weather;
 
     public Point(double lat, double lng) {
         this.lat = lat;

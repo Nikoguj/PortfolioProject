@@ -11,4 +11,5 @@ public class PointDto {
     private final double lng;
     private final int timeFromLastPoint;
     private final int arrivalTime;
+    private final Weather weatherDto;
 }
