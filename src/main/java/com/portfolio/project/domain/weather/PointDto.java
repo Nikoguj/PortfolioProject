@@ -1,4 +1,4 @@
-package com.portfolio.project.domain.google;
+package com.portfolio.project.domain.weather;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,5 +11,6 @@ public class PointDto {
     private final double lng;
     private final int timeFromLastPoint;
     private final int arrivalTime;
-    private final Weather weatherDto;
+    private final WeatherDto weatherDto;
+
 }

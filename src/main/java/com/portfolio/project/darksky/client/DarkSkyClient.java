@@ -23,9 +23,6 @@ public class DarkSkyClient {
     @Autowired
     private DarkSkyConfig darkSkyConfig;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     public Mono<DarkSkyForecastDto> getDarkSkyForecast(DarkSkyPoint darkSkyPoint) throws InterruptedException {
         Thread.sleep(15);
 

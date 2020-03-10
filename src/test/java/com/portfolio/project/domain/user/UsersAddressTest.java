@@ -1,4 +1,4 @@
-package com.portfolio.project.domain;
+package com.portfolio.project.domain.user;
 
 import com.portfolio.project.domain.user.UsersAddress;
 import com.portfolio.project.repository.user.UsersAddressRepository;

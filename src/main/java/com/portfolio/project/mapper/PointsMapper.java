@@ -1,9 +1,9 @@
 package com.portfolio.project.mapper;
 
-import com.portfolio.project.domain.google.Point;
-import com.portfolio.project.domain.google.PointDto;
-import com.portfolio.project.domain.google.Points;
-import com.portfolio.project.domain.google.PointsDto;
+import com.portfolio.project.domain.weather.Point;
+import com.portfolio.project.domain.weather.PointDto;
+import com.portfolio.project.domain.weather.Points;
+import com.portfolio.project.domain.weather.PointsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +22,6 @@ public class PointsMapper {
     }
 
     public PointDto mapToPointDto(Point point) {
-        return new PointDto(point.getLat(), point.getLng(), point.getTimeFromLastPoint(), point.getArrivalTime(),point.getWeather());
+        return new PointDto(point.getLat(), point.getLng(), point.getTimeFromLastPoint(), point.getArrivalTime(), weatherMapper.mapToWeatherDto(point.getWeather()));
     }
 }

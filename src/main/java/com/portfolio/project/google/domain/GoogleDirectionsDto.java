@@ -22,4 +22,6 @@ public class GoogleDirectionsDto {
 
     @JsonProperty("status")
     private String status;
+
+
 }

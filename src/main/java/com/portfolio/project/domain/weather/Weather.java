@@ -1,11 +1,12 @@
-package com.portfolio.project.domain.google;
+package com.portfolio.project.domain.weather;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Weather {
 
     private double apparentTemperature;

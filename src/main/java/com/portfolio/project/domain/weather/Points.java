@@ -1,4 +1,4 @@
-package com.portfolio.project.domain.google;
+package com.portfolio.project.domain.weather;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

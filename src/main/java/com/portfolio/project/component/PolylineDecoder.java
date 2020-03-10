@@ -1,6 +1,6 @@
-package com.portfolio.project.domain.google;
+package com.portfolio.project.component;
 
-import com.portfolio.project.domain.google.Point;
+import com.portfolio.project.domain.weather.Point;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

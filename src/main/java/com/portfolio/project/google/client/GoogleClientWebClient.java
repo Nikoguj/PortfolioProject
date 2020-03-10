@@ -1,6 +1,5 @@
 package com.portfolio.project.google.client;
 
-import com.portfolio.project.domain.google.Points;
 import com.portfolio.project.google.config.GoogleConfig;
 import com.portfolio.project.google.domain.GoogleDirectionsDto;
 import org.slf4j.Logger;
