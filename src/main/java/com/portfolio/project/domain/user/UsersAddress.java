@@ -6,21 +6,17 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "Users_Address")
 public class UsersAddress {
     private Long id;
-    private String City;
-    private String ZipCode;
-    private String Street;
-    private int HouseNumber;
-    private int ApartmentNumber;
+    private String Origin;
+    private String Destination;
     private Users users;
 
     public UsersAddress() {
 
     }
 
-    public UsersAddress(String city, String zipCode, int houseNumber) {
-        City = city;
-        ZipCode = zipCode;
-        HouseNumber = houseNumber;
+    public UsersAddress(String city, String destination) {
+        Origin = city;
+        Destination = destination;
     }
 
     @Id
@@ -36,51 +32,23 @@ public class UsersAddress {
     }
 
     @NotNull
-    @Column(name = "City")
-    public String getCity() {
-        return City;
+    @Column(name = "Origin")
+    public String getOrigin() {
+        return Origin;
     }
 
-    public void setCity(String city) {
-        City = city;
-    }
-
-    @NotNull
-    @Column(name = "Zip_Code")
-    public String getZipCode() {
-        return ZipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        ZipCode = zipCode;
-    }
-
-    @Column(name = "Street")
-    public String getStreet() {
-        return Street;
-    }
-
-    public void setStreet(String street) {
-        Street = street;
+    public void setOrigin(String origin) {
+        Origin = origin;
     }
 
     @NotNull
-    @Column(name = "House_Number")
-    public int getHouseNumber() {
-        return HouseNumber;
+    @Column(name = "Destination")
+    public String getDestination() {
+        return Destination;
     }
 
-    public void setHouseNumber(int houseNumber) {
-        HouseNumber = houseNumber;
-    }
-
-    @Column(name = "Apartment_Number")
-    public int getApartmentNumber() {
-        return ApartmentNumber;
-    }
-
-    public void setApartmentNumber(int apartmentNumber) {
-        ApartmentNumber = apartmentNumber;
+    public void setDestination(String destination) {
+        Destination = destination;
     }
 
     @ManyToOne()
@@ -101,23 +69,17 @@ public class UsersAddress {
 
         UsersAddress that = (UsersAddress) o;
 
-        if (HouseNumber != that.HouseNumber) return false;
-        if (ApartmentNumber != that.ApartmentNumber) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (City != null ? !City.equals(that.City) : that.City != null) return false;
-        if (ZipCode != null ? !ZipCode.equals(that.ZipCode) : that.ZipCode != null) return false;
-        if (!Street.equals(that.Street)) return false;
+        if (Origin != null ? !Origin.equals(that.Origin) : that.Origin != null) return false;
+        if (Destination != null ? !Destination.equals(that.Destination) : that.Destination != null) return false;
         return users != null ? users.equals(that.users) : that.users == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (City != null ? City.hashCode() : 0);
-        result = 31 * result + (ZipCode != null ? ZipCode.hashCode() : 0);
-        result = 31 * result + Street.hashCode();
-        result = 31 * result + HouseNumber;
-        result = 31 * result + ApartmentNumber;
+        result = 31 * result + (Origin != null ? Origin.hashCode() : 0);
+        result = 31 * result + (Destination != null ? Destination.hashCode() : 0);
         result = 31 * result + (users != null ? users.hashCode() : 0);
         return result;
     }

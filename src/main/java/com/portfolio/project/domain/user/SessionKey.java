@@ -60,4 +60,8 @@ public class SessionKey {
         return uuid.toString();
     }
 
+    public void setTermOfValidity() {
+        termOfValidity = LocalDateTime.now().plusMinutes(60);
+    }
+
 }

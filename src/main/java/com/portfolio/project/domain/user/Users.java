@@ -33,6 +33,18 @@ public class Users {
         this.createDate = new Date();
     }
 
+    public Users(Long id, String login, String password, String name, String surname, String phoneNumber, boolean phoneNumberConfirmed, Date createDate, Date lastLogin) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.phoneNumberConfirmed = phoneNumberConfirmed;
+        this.createDate = createDate;
+        this.lastLogin = lastLogin;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull

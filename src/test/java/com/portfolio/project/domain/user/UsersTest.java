@@ -1,8 +1,5 @@
 package com.portfolio.project.domain.user;
 
-import com.portfolio.project.domain.user.SessionKey;
-import com.portfolio.project.domain.user.Users;
-import com.portfolio.project.domain.user.UsersAddress;
 import com.portfolio.project.repository.user.SessionKeyRepository;
 import com.portfolio.project.repository.user.UserRepository;
 import com.portfolio.project.repository.user.UsersAddressRepository;
@@ -14,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -28,16 +24,8 @@ public class UsersTest {
     private final static String SURNAME = "surname1";
     private final static String PHONE_NUMBER = "345623444";
 
-    private final static String CITY = "city1";
-    private final static String ZIP_CODE = "ZipCode1";
-    private final static String STREET = "Street1";
-    private final static int HOUSE_NUMBER = 8;
-
-    private final static String CITY2 = "city2";
-    private final static String ZIP_CODE2 = "ZipCode2";
-    private final static String STREET2 = "Street2";
-    private final static int HOUSE_NUMBER2 = 261;
-    private final static int APARTMENT_NUMBER2 = 2;
+    private final static String ORIGIN = "origin1";
+    private final static String DESTINATION = "destination1";
 
     @Autowired
     private UserRepository userRepository;
@@ -155,8 +143,7 @@ public class UsersTest {
     public void testSaveUsersAddress() {
         //Given
         Users users = new Users(LOGIN, PASSWORD);
-        UsersAddress usersAddress = new UsersAddress(CITY, ZIP_CODE, HOUSE_NUMBER);
-        usersAddress.setStreet(STREET);
+        UsersAddress usersAddress = new UsersAddress(ORIGIN, DESTINATION);
 
         users.getUsersAddressList().add(usersAddress);
         usersAddress.setUsers(users);
@@ -169,10 +156,8 @@ public class UsersTest {
         //Then
         Assert.assertTrue(returnUsers.isPresent());
         Assert.assertEquals(1, returnUsers.get().getUsersAddressList().size());
-        Assert.assertEquals(CITY, returnUsers.get().getUsersAddressList().get(0).getCity());
-        Assert.assertEquals(ZIP_CODE, returnUsers.get().getUsersAddressList().get(0).getZipCode());
-        Assert.assertEquals(STREET, returnUsers.get().getUsersAddressList().get(0).getStreet());
-        Assert.assertEquals(HOUSE_NUMBER, returnUsers.get().getUsersAddressList().get(0).getHouseNumber());
+        Assert.assertEquals(ORIGIN, returnUsers.get().getUsersAddressList().get(0).getOrigin());
+        Assert.assertEquals(DESTINATION, returnUsers.get().getUsersAddressList().get(0).getDestination());
 
         //Clean up
         try {
@@ -186,8 +171,7 @@ public class UsersTest {
     public void testRemoveUsersAddress() {
         //Given
         Users users = new Users(LOGIN, PASSWORD);
-        UsersAddress usersAddress1 = new UsersAddress(CITY, ZIP_CODE, HOUSE_NUMBER);
-        usersAddress1.setStreet(STREET);
+        UsersAddress usersAddress1 = new UsersAddress(ORIGIN, DESTINATION);
 
         usersAddress1.setUsers(users);
         users.getUsersAddressList().add(usersAddress1);

@@ -15,6 +15,12 @@ public class UsersMail {
     public UsersMail() {
     }
 
+    public UsersMail( Long id, String mail, boolean mailConfirmed) {
+        this.id = id;
+        this.mail = mail;
+        this.mailConfirmed = mailConfirmed;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull

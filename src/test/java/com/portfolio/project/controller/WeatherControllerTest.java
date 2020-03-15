@@ -14,11 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(WeatherController.class)
@@ -53,7 +52,7 @@ public class WeatherControllerTest {
         when(pointsMapper.mapToPointsDto(points)).thenReturn(pointsDto);
 
         //When & Then
-        mockMvc.perform(get("/v1/points/getAllPoints/" + start + "/" + end + "/").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getAllPoints/" + start + "/" + end + "/").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].lat", is(20.0452)))
@@ -92,7 +91,7 @@ public class WeatherControllerTest {
         when(pointsMapper.mapToPointsDto(points)).thenReturn(pointsDto);
 
         //When & Then
-        mockMvc.perform(get("/v1/points/getPoints/" + start + "/" + end + "/" + distance).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPoints/" + start + "/" + end + "/" + distance).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].lat", is(51.110456)))
@@ -132,7 +131,7 @@ public class WeatherControllerTest {
 
 
         //When & Then
-        mockMvc.perform(get("/v1/points/getPointsWithArrivalTime/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPointsWithArrivalTime/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].lat", is(51.110456)))
@@ -183,7 +182,7 @@ public class WeatherControllerTest {
 
 
         //When & Then
-        mockMvc.perform(get("/v1/points/getPointsWithWeather/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPointsWithWeather/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].weatherDto.apparentTemperature", is(1.0)))
