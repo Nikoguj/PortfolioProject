@@ -10,15 +10,17 @@ public class UsersMail {
     private String mail;
     private String pinConfirmMail;
     private boolean mailConfirmed;
+    private boolean scheduledMail;
     private Users users;
 
     public UsersMail() {
     }
 
-    public UsersMail( Long id, String mail, boolean mailConfirmed) {
+    public UsersMail( Long id, String mail, boolean mailConfirmed, boolean scheduledMail) {
         this.id = id;
         this.mail = mail;
         this.mailConfirmed = mailConfirmed;
+        this.scheduledMail = scheduledMail;
     }
 
     @Id
@@ -76,4 +78,12 @@ public class UsersMail {
         return uuid.toString();
     }
 
+    @Column(name = "scheduled_mail")
+    public boolean isScheduledMail() {
+        return scheduledMail;
+    }
+
+    public void setScheduledMail(boolean sendScheduledMail) {
+        this.scheduledMail = sendScheduledMail;
+    }
 }

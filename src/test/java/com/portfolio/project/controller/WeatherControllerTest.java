@@ -48,11 +48,13 @@ public class WeatherControllerTest {
         String start = "start";
         String end = "end";
 
-        when(pointsService.getAllPoints(start, end)).thenReturn(points);
+        when(pointsService.getAllPoints(start, end, "sessionKey", 1L)).thenReturn(points);
         when(pointsMapper.mapToPointsDto(points)).thenReturn(pointsDto);
 
         //When & Then
-        mockMvc.perform(get("/v1/weather/getAllPoints/" + start + "/" + end + "/").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPoints/" + start + "/" + end + "/").contentType(MediaType.APPLICATION_JSON)
+                .param("userSessionKey","sessionKey")
+                .param("userId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].lat", is(20.0452)))
@@ -87,11 +89,13 @@ public class WeatherControllerTest {
         String end = "end";
         String distance = "350";
 
-        when(pointsService.getPointsWithDistanceAndTimeBetween(start, end, Integer.parseInt(distance))).thenReturn(points);
+        when(pointsService.getPointsWithDistanceAndTimeBetween(start, end, Integer.parseInt(distance), "sessionKey", 1L)).thenReturn(points);
         when(pointsMapper.mapToPointsDto(points)).thenReturn(pointsDto);
 
         //When & Then
-        mockMvc.perform(get("/v1/weather/getPoints/" + start + "/" + end + "/" + distance).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPoints/" + start + "/" + end + "/" + distance).contentType(MediaType.APPLICATION_JSON)
+                .param("userSessionKey","sessionKey")
+                .param("userId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].lat", is(51.110456)))
@@ -126,12 +130,14 @@ public class WeatherControllerTest {
         String end = "end";
         String distance = "350";
 
-        when(pointsService.getPointsWithArrivalTime(start, end, Integer.parseInt(distance), 0)).thenReturn(points);
+        when(pointsService.getPointsWithArrivalTime(start, end, Integer.parseInt(distance), 0, "sessionKey", 1L)).thenReturn(points);
         when(pointsMapper.mapToPointsDto(points)).thenReturn(pointsDto);
 
 
         //When & Then
-        mockMvc.perform(get("/v1/weather/getPointsWithArrivalTime/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPoints/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON)
+                .param("userSessionKey","sessionKey")
+                .param("userId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].lat", is(51.110456)))
@@ -177,12 +183,14 @@ public class WeatherControllerTest {
         String end = "end";
         String distance = "350";
 
-        when(pointsService.getPointsWithWeather(start, end, Integer.parseInt(distance), 0)).thenReturn(points);
+        when(pointsService.getPointsWithWeather(start, end, Integer.parseInt(distance), 0, "sessionKey", 1L)).thenReturn(points);
         when(pointsMapper.mapToPointsDto(points)).thenReturn(pointsDto);
 
 
         //When & Then
-        mockMvc.perform(get("/v1/weather/getPointsWithWeather/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/weather/getPointsWeather/" + start + "/" + end + "/" + distance + "/0").contentType(MediaType.APPLICATION_JSON)
+                .param("userSessionKey","sessionKey")
+                .param("userId", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listOfAllPoints", hasSize(3)))
                 .andExpect(jsonPath("$.listOfAllPoints[0].weatherDto.apparentTemperature", is(1.0)))

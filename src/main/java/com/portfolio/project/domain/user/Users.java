@@ -20,6 +20,8 @@ public class Users {
     private SessionKey sessionKey;
     private List<UsersAddress> usersAddressList = new ArrayList<>();
     private UsersMail usersMail;
+    private boolean admin;
+    private boolean block;
 
     public Users() {
         this.phoneNumberConfirmed = false;
@@ -33,7 +35,7 @@ public class Users {
         this.createDate = new Date();
     }
 
-    public Users(Long id, String login, String password, String name, String surname, String phoneNumber, boolean phoneNumberConfirmed, Date createDate, Date lastLogin) {
+    public Users(Long id, String login, String password, String name, String surname, String phoneNumber, boolean phoneNumberConfirmed, Date createDate, Date lastLogin, boolean admin, boolean block) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -43,6 +45,8 @@ public class Users {
         this.phoneNumberConfirmed = phoneNumberConfirmed;
         this.createDate = createDate;
         this.lastLogin = lastLogin;
+        this.admin = admin;
+        this.block = block;
     }
 
     @Id
@@ -163,6 +167,24 @@ public class Users {
 
     public void setUsersMail(UsersMail usersMail) {
         this.usersMail = usersMail;
+    }
+
+    @Column(name = "admin")
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    @Column(name = "block")
+    public boolean isBlock() {
+        return block;
+    }
+
+    public void setBlock(boolean block) {
+        this.block = block;
     }
 
     @Override

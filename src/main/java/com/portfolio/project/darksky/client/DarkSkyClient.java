@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
@@ -26,7 +25,6 @@ public class DarkSkyClient {
     public Mono<DarkSkyForecastDto> getDarkSkyForecast(DarkSkyPoint darkSkyPoint) throws InterruptedException {
         Thread.sleep(15);
 
-        URI url = getURI(darkSkyPoint);
         try{
             return WebClient.create()
                     .get()

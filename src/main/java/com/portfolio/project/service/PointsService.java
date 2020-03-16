@@ -5,15 +5,26 @@ import com.portfolio.project.component.PolylineDecoder;
 import com.portfolio.project.darksky.domain.DarkSkyForecastDto;
 import com.portfolio.project.darksky.domain.DarkSkyPoint;
 import com.portfolio.project.darksky.service.DarkSkyService;
-import com.portfolio.project.domain.weather.*;
-import com.portfolio.project.google.domain.*;
+import com.portfolio.project.domain.user.Users;
+import com.portfolio.project.domain.user.UsersAddress;
+import com.portfolio.project.domain.weather.Point;
+import com.portfolio.project.domain.weather.Points;
+import com.portfolio.project.domain.weather.Weather;
+import com.portfolio.project.exception.UserNotFoundException;
+import com.portfolio.project.google.domain.GoogleDirections;
+import com.portfolio.project.google.domain.GoogleDirectionsDto;
+import com.portfolio.project.google.domain.GoogleSteps;
 import com.portfolio.project.google.mapper.GoogleMapper;
 import com.portfolio.project.google.service.GoogleService;
 import com.portfolio.project.mapper.WeatherMapper;
+import com.portfolio.project.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,25 +49,34 @@ public class PointsService {
     @Autowired
     private MyMath myMath;
 
-    public Points getAllPoints(final String directions, final String origin) {
-        GoogleDirections googleDirections = googleMapper.mapToDirections(googleService.fetchGoogleDirections(origin, directions));
+    @Autowired
+    private UserRepository userRepository;
 
-        List<GoogleSteps> googleStepsList = googleDirections.getRoutes().get(0).getLegs().get(0).getSteps();
+    public Points getAllPoints(final String directions, final String origin, final String userSessionKey, final Long userId) throws UserNotFoundException {
+        Users user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        if (user.getSessionKey().getSessionKey().equals(userSessionKey) && LocalDateTime.now().isBefore(user.getSessionKey().getTermOfValidity())) {
+            GoogleDirections googleDirections = googleMapper.mapToDirections(googleService.fetchGoogleDirections(origin, directions));
 
-        Points points = new Points();
+            List<GoogleSteps> googleStepsList = googleDirections.getRoutes().get(0).getLegs().get(0).getSteps();
 
-        for (GoogleSteps googleSteps : googleStepsList) {
-            points.getListOfAllPoints().add(new Point(googleSteps.getStartLocation().getLat(), googleSteps.getStartLocation().getLng()));
-            points.getListOfAllPoints().addAll(polylineDecoder.decode(googleSteps.getGooglePolyline().getPoints()));
-            points.getListOfAllPoints().add(new Point(googleSteps.getEndLocation().getLat(), googleSteps.getEndLocation().getLng()));
+            Points points = new Points();
+
+            for (GoogleSteps googleSteps : googleStepsList) {
+                points.getListOfAllPoints().add(new Point(googleSteps.getStartLocation().getLat(), googleSteps.getStartLocation().getLng()));
+                points.getListOfAllPoints().addAll(polylineDecoder.decode(googleSteps.getGooglePolyline().getPoints()));
+                points.getListOfAllPoints().add(new Point(googleSteps.getEndLocation().getLat(), googleSteps.getEndLocation().getLng()));
+            }
+
+            return points;
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid SessionKey");
         }
 
-        return points;
     }
 
-    public Points getPointsWithDistance(final String directions, final String origin, final int distance) {
+    public Points getPointsWithDistance(final String directions, final String origin, final int distance, final String userSessionKey, final Long userId) throws UserNotFoundException {
 
-        Points points = getAllPoints(directions, origin);
+        Points points = getAllPoints(directions, origin, userSessionKey, userId);
 
         List<Point> pointList = points.getListOfAllPoints();
 
@@ -79,9 +99,9 @@ public class PointsService {
     }
 
 
-    public Points getPointsWithDistanceAndTimeBetween(final String directions, final String origin, final int distance) throws InterruptedException {
+    public Points getPointsWithDistanceAndTimeBetween(final String directions, final String origin, final int distance, final String userSessionKey, final Long userId) throws InterruptedException, UserNotFoundException {
 
-        Points points = getPointsWithDistance(directions, origin, distance);
+        Points points = getPointsWithDistance(directions, origin, distance, userSessionKey, userId);
 
         for (int i = 0; i < points.getListOfAllPoints().size() - 1; i++) {
             String directionsString1 = points.getListOfAllPoints().get(i).getLat() + "," + points.getListOfAllPoints().get(i).getLng();
@@ -89,7 +109,7 @@ public class PointsService {
 
             Mono<GoogleDirectionsDto> mono = googleService.fetchGoogleDirectionsWebClient(directionsString1, directionsString2);
 
-            int finalI = i+1;
+            int finalI = i + 1;
             mono.subscribe(t -> points.getListOfAllPoints().get(finalI).setTimeFromLastPoint(t.getRoutes().get(0).getLegs().get(0).getDuration().getValue()));
         }
         Thread.sleep(1000);
@@ -97,8 +117,8 @@ public class PointsService {
         return points;
     }
 
-    public Points getPointsWithArrivalTime(final String directions, final String origin, final int distance, final int startTime) throws InterruptedException {
-        Points points = getPointsWithDistanceAndTimeBetween(directions, origin, distance);
+    public Points getPointsWithArrivalTime(final String directions, final String origin, final int distance, final int startTime, final String userSessionKey, final Long userId) throws InterruptedException, UserNotFoundException {
+        Points points = getPointsWithDistanceAndTimeBetween(directions, origin, distance, userSessionKey, userId);
 
         points.getListOfAllPoints().get(0).setArrivalTime(startTime);
 
@@ -109,8 +129,13 @@ public class PointsService {
         return points;
     }
 
-    public Points getPointsWithWeather(final String directions, final String origin, final int distance, final int startTime) throws InterruptedException {
-        Points points = getPointsWithArrivalTime(directions, origin, distance, startTime);
+    public Points getPointsWithWeather(final String directions, final String origin, final int distance, final int startTime, final String userSessionKey, final Long userId) throws InterruptedException, UserNotFoundException {
+        Points points = getPointsWithArrivalTime(directions, origin, distance, startTime, userSessionKey, userId);
+        Users user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        UsersAddress usersAddress = new UsersAddress(origin, directions);
+        usersAddress.setUsers(user);
+        user.getUsersAddressList().add(usersAddress);
+        userRepository.save(user);
 
         for (int i = 0; i < points.getListOfAllPoints().size(); i++) {
             DarkSkyPoint darkSkyPoint = new DarkSkyPoint(points.getListOfAllPoints().get(i).getLat(), points.getListOfAllPoints().get(i).getLng());
@@ -125,7 +150,7 @@ public class PointsService {
                     Weather weather = weatherMapper.mapToWeather(t.getDarkSkyHourly().getDarkSkyCurrentlyAndHourlyDtoList().get(j));
                     Weather weather2;
                     try {
-                        weather2 = weatherMapper.mapToWeather(t.getDarkSkyHourly().getDarkSkyCurrentlyAndHourlyDtoList().get(j+1));
+                        weather2 = weatherMapper.mapToWeather(t.getDarkSkyHourly().getDarkSkyCurrentlyAndHourlyDtoList().get(j + 1));
                     } catch (Exception e) {
                         weather2 = null;
                     }

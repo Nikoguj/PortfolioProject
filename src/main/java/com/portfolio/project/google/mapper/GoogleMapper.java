@@ -53,53 +53,23 @@ public class GoogleMapper {
         );
     }
 
-    public GoogleStepsDto mapToGoogleStepsDto(GoogleSteps googleSteps) {
-        return new GoogleStepsDto(
-                mapToGoogleDistanceDto(googleSteps.getDistance()),
-                mapToGoogleDurationDto(googleSteps.getDuration()),
-                mapToGoogleLocationDto(googleSteps.getEndLocation()),
-                mapToGoogleLocationDto(googleSteps.getStartLocation()),
-                mapToGooglePolylineDto(googleSteps.getGooglePolyline())
-        );
-    }
-
     public GoogleDuration mapToGoogleDuration(GoogleDurationDto googleDurationDto) {
         return new GoogleDuration(googleDurationDto.getText(), googleDurationDto.getValue());
-    }
-
-    public GoogleDurationDto mapToGoogleDurationDto(GoogleDuration googleDuration) {
-        return new GoogleDurationDto(googleDuration.getText(), googleDuration.getValue());
     }
 
     public GoogleGeocodedWaypoints mapToGoogleGeocodedWaypoints(GoogleGeocodedWaypointsDto googleGeocodedWaypointsDto) {
         return new GoogleGeocodedWaypoints(googleGeocodedWaypointsDto.getGeocoderStatus(), googleGeocodedWaypointsDto.getPlaceId());
     }
 
-    public GoogleGeocodedWaypointsDto mapToGoogleGeocodedWaypointsDto(GoogleGeocodedWaypoints googleGeocodedWaypoints) {
-        return new GoogleGeocodedWaypointsDto(googleGeocodedWaypoints.getGeocoderStatus(), googleGeocodedWaypoints.getPlaceId());
-    }
-
     public GoogleLocation mapToGoogleLocation(GoogleLocationDto googleLocationDto) {
         return new GoogleLocation(googleLocationDto.getLat(), googleLocationDto.getLng());
-    }
-
-    public GoogleLocationDto mapToGoogleLocationDto(GoogleLocation googleLocation) {
-        return new GoogleLocationDto(googleLocation.getLat(), googleLocation.getLng());
     }
 
     public GooglePolyline mapToGooglePolyline(GooglePolylineDto googlePolylineDTO) {
         return new GooglePolyline(googlePolylineDTO.getPoints());
     }
 
-    public GooglePolylineDto mapToGooglePolylineDto(GooglePolyline googlePolyline) {
-        return new GooglePolylineDto(googlePolyline.getPoints());
-    }
-
     public GoogleDistance mapToGoogleDistance(GoogleDistanceDto googleDistanceDto) {
         return new GoogleDistance(googleDistanceDto.getText(), googleDistanceDto.getValue());
-    }
-
-    public GoogleDistanceDto mapToGoogleDistanceDto(GoogleDistance googleDistance) {
-        return new GoogleDistanceDto(googleDistance.getText(), googleDistance.getValue());
     }
 }

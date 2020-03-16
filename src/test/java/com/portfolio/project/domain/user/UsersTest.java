@@ -3,7 +3,6 @@ package com.portfolio.project.domain.user;
 import com.portfolio.project.repository.user.SessionKeyRepository;
 import com.portfolio.project.repository.user.UserRepository;
 import com.portfolio.project.repository.user.UsersAddressRepository;
-import com.portfolio.project.service.EmailService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,6 @@ public class UsersTest {
 
     private final static String LOGIN = "login1";
     private final static String PASSWORD = "password1";
-    private final static String MAIL = "mail1";
     private final static String NAME = "name1";
     private final static String SURNAME = "surname1";
     private final static String PHONE_NUMBER = "345623444";
@@ -35,9 +33,6 @@ public class UsersTest {
 
     @Autowired
     private UsersAddressRepository usersAddressRepository;
-
-    @Autowired
-    private EmailService emailService;
 
     @Test
     public void testSaveUserWithoutOtherEntity() {

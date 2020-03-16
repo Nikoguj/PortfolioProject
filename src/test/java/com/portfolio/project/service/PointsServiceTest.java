@@ -1,13 +1,15 @@
 package com.portfolio.project.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.portfolio.project.component.PolylineDecoder;
+import com.portfolio.project.domain.user.SessionKey;
+import com.portfolio.project.domain.user.Users;
 import com.portfolio.project.domain.weather.Point;
 import com.portfolio.project.domain.weather.Points;
-import com.portfolio.project.google.config.GoogleConfig;
+import com.portfolio.project.exception.UserNotFoundException;
 import com.portfolio.project.google.domain.*;
 import com.portfolio.project.google.mapper.GoogleMapper;
 import com.portfolio.project.google.service.GoogleService;
+import com.portfolio.project.repository.user.UserRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +17,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,6 +38,9 @@ public class PointsServiceTest {
 
     @Mock
     private PolylineDecoder polylineDecoder;
+
+    @Mock
+    UserRepository userRepository;
 
     @Before
     public void before() {
@@ -114,7 +118,7 @@ public class PointsServiceTest {
     }
 
     @Test
-    public void getAllPoints() {
+    public void getAllPoints() throws UserNotFoundException {
         //Given
         String start = "start";
         String end = "end";
@@ -125,8 +129,16 @@ public class PointsServiceTest {
         point2.setTimeFromLastPoint(0);
         Point point3 = new Point(50.005, 50.006);
         point2.setTimeFromLastPoint(0);
+
+        Users users = new Users();
+
+        SessionKey sessionKey = new SessionKey();
+        sessionKey.setSessionKey("userSessionKey");
+        sessionKey.setTermOfValidity(LocalDateTime.now().plusMonths(1000));
+        users.setSessionKey(sessionKey);
         //When
-        Points points = pointsService.getAllPoints(start, end);
+        when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(users));
+        Points points = pointsService.getAllPoints(start, end, "userSessionKey", 1L);
 
         //Then
         Assert.assertNotNull(points);
@@ -136,20 +148,4 @@ public class PointsServiceTest {
         Assert.assertEquals(point3, points.getListOfAllPoints().get(2));
     }
 
-    @Test
-    public void getPointsWithDistance() {
-
-    }
-
-    @Test
-    public void getPointsWithDistanceAndTimeBetween() {
-    }
-
-    @Test
-    public void getPointsWithArrivalTime() {
-    }
-
-    @Test
-    public void getPointsWithWeather() {
-    }
 }

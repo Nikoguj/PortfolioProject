@@ -1,6 +1,5 @@
 package com.portfolio.project.google.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

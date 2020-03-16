@@ -14,8 +14,8 @@ public class UsersAddress {
 
     }
 
-    public UsersAddress(String city, String destination) {
-        Origin = city;
+    public UsersAddress(String origin, String destination) {
+        Origin = origin;
         Destination = destination;
     }
 
